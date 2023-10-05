@@ -1,27 +1,75 @@
 import { useState } from "react";
+import { useCategories } from "../../context/CategoriesContext";
 
 const Category: React.FC = ({ category }) => {
-  const { name, subcategories: initialSubcategories } = category;
-  const [subcategories, setSubcategories] = useState(initialSubcategories);
+  const { addCategory, editCategory, removeCategory } = useCategories();
+  const [showAddInput, setShowAddInput] = useState(false);
+  const [showEditInput, setShowEditInput] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
-  const addNewCategory = () => {
-    setSubcategories([
-      ...subcategories,
-      {
-        name: "New subcategory",
-        subcategories: [],
-      },
-    ]);
+  const handleAddCategory = (e) => {
+    e.preventDefault();
+    addCategory({
+      name: inputValue,
+      subcategories: [],
+    });
+  };
+
+  const handleEditCategoryClick = () => {
+    setShowEditInput(!showEditInput);
+    setInputValue(category.name);
+  };
+
+  const handleEditCategory = (e) => {
+    e.preventDefault();
+    editCategory(category.id, {
+      ...category,
+      name: inputValue,
+    });
+    setShowEditInput(false);
+  };
+
+  const handleRemoveCategory = () => {
+    removeCategory(category.id);
   };
 
   return (
     <>
-      <h1>{name}</h1>
-      <button onClick={addNewCategory}>+</button>
-      {subcategories &&
-        subcategories.map((subcategory, index) => (
-          <Category key={index} category={subcategory} />
-        ))}
+      {showEditInput ? (
+        <div>
+          <form onSubmit={handleEditCategory}>
+            <input
+              defaultValue={category.name}
+              onChange={(e) => setInputValue(e.target.value)}
+            ></input>
+            <button onClick={() => setShowEditInput(false)}>-</button>
+            <button type="submit">+</button>
+          </form>
+        </div>
+      ) : (
+        <>
+          <span>{category.name}</span>
+          <button onClick={() => setShowAddInput(!showAddInput)}>+</button>
+          <button onClick={handleEditCategoryClick}>/</button>
+          <button type="button" onClick={handleRemoveCategory}>
+            -
+          </button>
+          {showAddInput && (
+            <div>
+              <form onSubmit={handleAddCategory}>
+                <input
+                  placeholder="Category name"
+                  onChange={(e) => setInputValue(e.target.value)}
+                ></input>
+                <button type="button" onClick={() => setShowAddInput(false)}>
+                  -
+                </button>
+                <button type="submit">+</button>
+              </form>
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 };
