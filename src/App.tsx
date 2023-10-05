@@ -1,7 +1,8 @@
+import MainPage from "./pages/MainPage";
 import "./App.css";
 
 function App() {
-  return <h1>Categories and Services</h1>;
+  return <MainPage />;
 }
 
 export default App;
