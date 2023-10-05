@@ -2,19 +2,17 @@ import { useState } from "react";
 import { useCategories } from "../../context/CategoriesContext";
 
 const Categories: React.FC = () => {
-  const { categories, setCategories } = useCategories();
+  const { addCategory } = useCategories();
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const handleAddCategory = (e) => {
     e.preventDefault();
-    setCategories([
-      ...categories,
-      {
-        name: inputValue,
-        subcategories: [],
-      },
-    ]);
+    addCategory({
+      id: Date.now(),
+      name: inputValue,
+      subcategories: [],
+    });
   };
 
   return (
