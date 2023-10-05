@@ -9,6 +9,13 @@ export const CategoriesProvider = ({ children }) => {
     setCategories([...categories, category]);
   };
 
+  const editCategory = (categoryId, updatedCategory) => {
+    const updatedCategories = categories.map((category) =>
+      category.id === categoryId ? updatedCategory : category
+    );
+    setCategories(updatedCategories);
+  };
+
   const removeCategory = (categoryId) => {
     const updatedCategories = categories.filter(
       (category) => category.id !== categoryId
@@ -17,7 +24,13 @@ export const CategoriesProvider = ({ children }) => {
   };
 
   const categoriesContextValue = useMemo(
-    () => ({ categories, setCategories, addCategory, removeCategory }),
+    () => ({
+      categories,
+      setCategories,
+      addCategory,
+      editCategory,
+      removeCategory,
+    }),
     [categories, setCategories, addCategory, removeCategory]
   );
 
