@@ -1,0 +1,15 @@
+.category {
+  position: relative;
+}
+
+.subcategory {
+  /* Styles for subcategory boxes */
+}
+
+.line {
+  width: 2px;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
