@@ -1,38 +1,36 @@
 import { useState } from "react";
 import { useCategories } from "../../context/CategoriesContext";
 
-const Category: React.FC = ({ category }) => {
+const Subcategory: React.FC = ({ subcategory }) => {
   const { addCategory, editCategory, removeCategory } = useCategories();
   const [showAddInput, setShowAddInput] = useState(false);
   const [showEditInput, setShowEditInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const handleAddCategory = (e, category) => {
+  const handleAddCategory = (e) => {
     e.preventDefault();
-    addCategory(category, {
-      id: Date.now(),
+    addCategory({
       name: inputValue,
       subcategories: [],
     });
   };
 
   const handleEditCategoryClick = () => {
-    console.log(category);
     setShowEditInput(!showEditInput);
-    setInputValue(category.name);
+    setInputValue(subcategory.name);
   };
 
   const handleEditCategory = (e) => {
     e.preventDefault();
-    editCategory(category.id, {
-      ...category,
+    editCategory(subcategory.id, {
+      ...subcategory,
       name: inputValue,
     });
     setShowEditInput(false);
   };
 
   const handleRemoveCategory = () => {
-    removeCategory(category.id);
+    removeCategory(subcategory.id);
   };
 
   return (
@@ -41,7 +39,7 @@ const Category: React.FC = ({ category }) => {
         <div>
           <form onSubmit={handleEditCategory}>
             <input
-              defaultValue={category.name}
+              defaultValue={subcategory.name}
               onChange={(e) => setInputValue(e.target.value)}
             ></input>
             <button onClick={() => setShowEditInput(false)}>-</button>
@@ -50,7 +48,7 @@ const Category: React.FC = ({ category }) => {
         </div>
       ) : (
         <>
-          <span>{category.name}</span>
+          <span>{subcategory.name}</span>
           <button onClick={() => setShowAddInput(!showAddInput)}>+</button>
           <button onClick={handleEditCategoryClick}>/</button>
           <button type="button" onClick={handleRemoveCategory}>
@@ -58,7 +56,7 @@ const Category: React.FC = ({ category }) => {
           </button>
           {showAddInput && (
             <div>
-              <form onSubmit={(e) => handleAddCategory(e, category)}>
+              <form onSubmit={handleAddCategory}>
                 <input
                   placeholder="Category name"
                   onChange={(e) => setInputValue(e.target.value)}
@@ -72,12 +70,47 @@ const Category: React.FC = ({ category }) => {
           )}
         </>
       )}
-      {category.subcategories.length > 0 &&
-        category.subcategories.map((subcategory) => (
-          <Category key={subcategory.id} category={subcategory} />
-        ))}
     </div>
   );
 };
 
-export default Category;
+export default Subcategory;
+
+// import { useState } from "react";
+
+// const Category: React.FC = ({ category }) => {
+//   const { name, subcategories: initialSubcategories } = category;
+//   const [subcategories, setSubcategories] = useState(initialSubcategories);
+
+//   const addNewCategory = () => {
+//     setSubcategories([
+//       ...subcategories,
+//       {
+//         name: "New subcategory",
+//         subcategories: [],
+//       },
+//     ]);
+//   };
+
+//   const removeCategory = (categoryToRemove) => {
+//     setSubcategories(
+//       subcategories.filter((subcategory) => subcategory !== categoryToRemove)
+//     );
+//   };
+
+//   return (
+//     <>
+//       <h1>{name}</h1>
+//       {subcategories &&
+//         subcategories.map((subcategory, index) => (
+//           <div key={index}>
+//             <Category category={subcategory} />
+//             <button onClick={addNewCategory}>+</button>
+//             <button onClick={() => removeCategory(subcategory)}>-</button>
+//           </div>
+//         ))}
+//     </>
+//   );
+// };
+
+// export default Category;

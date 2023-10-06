@@ -3,10 +3,48 @@ import { createContext, useContext, useState, useMemo } from "react";
 const CategoriesContext = createContext();
 
 export const CategoriesProvider = ({ children }) => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([
+    {
+      id: Date.now(),
+      name: "Categories",
+      subcategories: [],
+    },
+  ]);
 
-  const addCategory = (category) => {
-    setCategories([...categories, category]);
+  function findCategoryById(categories, categoryId) {
+    for (let category of categories) {
+      if (category.id === categoryId) {
+        return category;
+      }
+      if (category.subcategories && category.subcategories.length > 0) {
+        const foundCategory = findCategoryById(
+          category.subcategories,
+          categoryId
+        );
+        if (foundCategory) {
+          return foundCategory;
+        }
+      }
+    }
+    return null; // Return null if the category is not found
+  }
+
+  const addCategory = (parentCategoryId, newCategory) => {
+    const updatedCategories = categories.map((category) =>
+      category.id === parentCategoryId
+        ? {
+            ...category,
+            subcategories: [
+              ...category.subcategories,
+              {
+                ...newCategory,
+                subcategories: [], // Initialize with an empty subcategories array
+              },
+            ],
+          }
+        : category
+    );
+    setCategories(updatedCategories);
   };
 
   const editCategory = (categoryId, updatedCategory) => {
